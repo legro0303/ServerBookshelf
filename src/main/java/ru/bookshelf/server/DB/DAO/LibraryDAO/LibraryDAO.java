@@ -1,37 +1,50 @@
 package ru.bookshelf.server.DB.DAO.LibraryDAO;
 
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bookshelf.server.domain.entity.UploadedBook;
-import ru.bookshelf.server.service.dto.UploadedBookDTO;
-import ru.bookshelf.server.service.mapper.LibraryMapper.LibraryMapper;
-
+import ru.bookshelf.server.domain.entity.Library;
+import ru.bookshelf.server.service.dto.BookDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class LibraryDAO {
-  private final LibraryMapper libraryMapper = Mappers.getMapper(LibraryMapper.class);
-
   @Autowired private LibraryRepository libraryRepository;
 
-  public void bookSaving(UploadedBookDTO uploadedBookDTO) {
-    libraryRepository.save(libraryMapper.toEntity(uploadedBookDTO));
+  public void bookSaving(BookDTO bookDTO) {
+    Library library = new Library();
+    libraryRepository.save(library
+            .toBuilder()
+            .id(bookDTO.getId())
+            .author(bookDTO.getAuthor())
+            .title(bookDTO.getTitle())
+            .publishDate(bookDTO.getPublishDate())
+            .login(bookDTO.getOwner())
+            .fileData(bookDTO.getFileData())
+            .build());
   }
 
-  public void bookDeleting(UploadedBookDTO uploadedBookDTO) {
-    libraryRepository.delete(libraryMapper.toEntity(uploadedBookDTO));
+  public void bookDeleting(BookDTO bookDTO) {
+    Library library = new Library();
+    libraryRepository.delete(library
+            .toBuilder()
+            .id(bookDTO.getId())
+            .author(bookDTO.getAuthor())
+            .title(bookDTO.getTitle())
+            .publishDate(bookDTO.getPublishDate())
+            .login(bookDTO.getOwner())
+            .fileData(bookDTO.getFileData())
+            .build());
   }
 
-  public Long countForDelete(UploadedBookDTO uploadedBookDTO) {
-    return libraryRepository.countByLoginAndId(uploadedBookDTO.getLogin(), uploadedBookDTO.getId());
+  public Long countForDelete(BookDTO bookDTO) {
+    return libraryRepository.countByLoginAndId(bookDTO.getOwner(), bookDTO.getId());
   }
 
   public List countOfBooks() {
-    Iterable<UploadedBook> request;
-    List<UploadedBook> booksList = new ArrayList<UploadedBook>();
+    Iterable<Library> request;
+    List<Library> booksList = new ArrayList<Library>();
     request = libraryRepository.findAll();
     request.forEach(booksList::add);
 

@@ -1,8 +1,6 @@
 package ru.bookshelf.server.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,17 +8,21 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder(toBuilder = true)
 @Table(name = "personal_data")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(name = "s_name")
-  private String s_name;
+  @Column(name = "first_name")
+  private String firstName;
 
-  @Column(name = "f_name")
-  private String f_name;
+  @Column(name = "second_name")
+  private String secondName;
 
   @Column(name = "login")
   private String login;

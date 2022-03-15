@@ -1,8 +1,6 @@
 package ru.bookshelf.server.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,8 +9,12 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder(toBuilder = true)
 @Table(name = "library")
-public class UploadedBook {
+public class Library {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -24,12 +26,12 @@ public class UploadedBook {
   private String title;
 
   @Column(name = "publish_date")
-  private String publish_date;
+  private LocalDate publishDate;
 
   @Column(name = "login")
   private String login;
 
   @Lob
   @Column(name = "file_data")
-  private byte[] file_data;
+  private byte[] fileData;
 }

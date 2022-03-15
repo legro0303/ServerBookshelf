@@ -1,12 +1,14 @@
 package ru.bookshelf.server.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder(toBuilder = true)
 public class ValidationResultDTO {
   public Boolean validationLogin;
   public Boolean authorization;

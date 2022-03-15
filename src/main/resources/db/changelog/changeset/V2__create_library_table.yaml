@@ -29,7 +29,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: login
+                  name: owner
                   type: character varying(30)
                   constraints:
                     nullable: false
