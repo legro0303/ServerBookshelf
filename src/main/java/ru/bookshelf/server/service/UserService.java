@@ -3,44 +3,39 @@ package ru.bookshelf.server.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.bookshelf.server.DB.DAO.UserDAO.UserDAO;
+import ru.bookshelf.server.domain.entity.User;
+import ru.bookshelf.server.repository.UserRepository;
 import ru.bookshelf.server.service.dto.UserAuthDTO;
 import ru.bookshelf.server.service.dto.UserRegDTO;
-import ru.bookshelf.server.service.dto.ValidationResultDTO;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class UserService {
-  private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
-  public void registrationUser(UserRegDTO userRegDTO) {
-    log.info("[UserServiceImpl.registrationUser] personDTO = {}", userRegDTO);
-    userDAO.userRegistration(userRegDTO);
-  }
-
-  public ValidationResultDTO authorizationUser(UserAuthDTO userAuthDTO) {
-    log.info("[UserServiceImpl.authorizationUser] personDTO = {}", userAuthDTO);
-    ValidationResultDTO validationResultDTO = new ValidationResultDTO();
-    var user = userDAO.userAuthorization(userAuthDTO);
-
-    validationResultDTO.authorization = false;
-    if (user.isPresent()) {
-      validationResultDTO.authorization = true;
+    public void registrationUser(UserRegDTO userRegDTO) {
+        log.info("[UserServiceImpl.registrationUser] personDTO = {}", userRegDTO);
+        User user = new User();
+        userRepository.save(user
+                .toBuilder()
+                .firstName(userRegDTO.getFirstName())
+                .secondName(userRegDTO.getSecondName())
+                .login(userRegDTO.getLogin())
+                .mail(userRegDTO.getMail())
+                .password(userRegDTO.getPassword())
+                .build());
     }
-    return validationResultDTO;
-  }
 
-  public ValidationResultDTO validationUser(UserAuthDTO userAuthDTO) {
-    log.info("[UserServiceImpl.validationUser] personDTO = {}", userAuthDTO);
-    var personCount = userDAO.userValidation(userAuthDTO);
-    ValidationResultDTO validationResultDTO = new ValidationResultDTO();
-
-    if (personCount != 0) {
-      validationResultDTO.validationLogin = false;
-    } else {
-      validationResultDTO.validationLogin = true;
+    public boolean authorizationUser(UserAuthDTO userAuthDTO) {
+        log.info("[UserServiceImpl.authorizationUser] personDTO = {}", userAuthDTO);
+        User user = userRepository.getFirstByLoginAndPassword(userAuthDTO.getLogin(), userAuthDTO.getPassword());
+        return user != null ? true : false;
     }
-    return validationResultDTO;
-  }
+
+    public boolean validationUser(UserAuthDTO userAuthDTO) {
+        log.info("[UserServiceImpl.validationUser] personDTO = {}", userAuthDTO);
+        long personCount = userRepository.countByLogin(userAuthDTO.getLogin());
+        return personCount != 0 ? false : true;
+    }
 }
