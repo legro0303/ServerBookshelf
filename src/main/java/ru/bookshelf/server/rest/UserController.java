@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
+import org.springframework.web.bind.annotation.*;
 import ru.bookshelf.server.service.UserService;
 import ru.bookshelf.server.service.dto.UserAuthDTO;
 import ru.bookshelf.server.service.dto.UserRegDTO;
@@ -22,40 +19,33 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(
+    @PostMapping(
             value = "/registration",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public void registrationUser(UserRegDTO userRegDTO) {
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void registrationUser(@Valid @RequestBody UserRegDTO userRegDTO) {
         log.info("[UserController.registrationUser] personDTO = {}", userRegDTO);
         userService.registrationUser(userRegDTO);
     }
 
     ;
 
-    @RequestMapping(
+    @PostMapping(
             value = "/validation",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean validationUser(UserAuthDTO userAuthDTO) {
+    @ResponseBody
+    public boolean validationUser(@Valid @RequestBody UserAuthDTO userAuthDTO) {
         log.info("[UserController.validationUser] personDTO = {}", userAuthDTO);
         return userService.validationUser(userAuthDTO);
     }
-
     ;
 
-    @RequestMapping(
+    @PostMapping(
             value = "/authorization",
-            method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<String> authorizationUser(@Valid UserAuthDTO userAuthDTO) {
+    @ResponseBody
+    public boolean authorizationUser(@Valid @RequestBody UserAuthDTO userAuthDTO) {
         log.info("[UserController.authorizationUser] personDTO = {}", userAuthDTO);
-        log.info("[UserController.authorizationUser] personDTO = {}", userService.authorizationUser(userAuthDTO));
-        if (userService.authorizationUser(userAuthDTO)) {
-            return Flux.just("ok");
-        } else {
-            return Flux.just("bad_request");
-        }
+        return userService.authorizationUser(userAuthDTO);
     }
 }
