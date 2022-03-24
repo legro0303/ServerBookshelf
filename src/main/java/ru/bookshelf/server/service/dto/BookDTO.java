@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @ToString
 @Builder(toBuilder = true)
 public class BookDTO {
+    long id;
     String author;
     String title;
     LocalDate publishDate;

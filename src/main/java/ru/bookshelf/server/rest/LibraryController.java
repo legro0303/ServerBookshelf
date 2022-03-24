@@ -11,6 +11,7 @@ import ru.bookshelf.server.service.LibraryService;
 import ru.bookshelf.server.service.dto.BookDTO;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -28,20 +29,39 @@ public class LibraryController {
 
     ;
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET, consumes = MediaType.ALL_VALUE)
+    @GetMapping(value = "/get")
     public List countOfBooks() {
+        List<BookDTO> bookDTOList = new ArrayList<>();
         List<Book> booksList = libraryService.countOfBooks();
-        return booksList;
+        for (Book book : booksList) {
+            BookDTO bookDTO = BookDTO
+                    .builder()
+                    .id(book.getId())
+                    .author(book.getAuthor())
+                    .title(book.getTitle())
+                    .publishDate(book.getPublishDate())
+                    .owner(book.getOwner())
+                    .build();
+            bookDTOList.add(bookDTO);
+        }
+        return bookDTOList;
     }
 
     ;
 
-    @RequestMapping(
+    @GetMapping(value = "/get-book-bytes/{id}")
+    @ResponseBody
+    public byte[] bookBytes(@PathVariable String id) {
+        return libraryService.getBytes(id);
+    }
+
+
+    ;
+
+    @PostMapping(
             value = "/delete",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean deleteBook(BookDTO bookDTO) {
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public boolean deleteBook(@Valid @RequestBody BookDTO bookDTO) {
         log.info("[LibraryController.deleteBook] uploadedBookDTO = {}", bookDTO);
         return libraryService.deleteBook(bookDTO);
     }

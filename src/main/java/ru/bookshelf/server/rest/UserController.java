@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @Slf4j
 @Tag(name = "User controller")
 @RestController
-@RequestMapping("message")
+@RequestMapping("user")
 public class UserController {
     @Autowired
     private UserService userService;
