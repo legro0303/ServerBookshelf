@@ -18,15 +18,11 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String author;
     private String title;
-
     @Column(name = "publish_date")
     private LocalDate publishDate;
-
     private String owner;
-
     @Lob
     @Column(name = "file_data")
     private byte[] fileData;

@@ -14,8 +14,8 @@ import ru.bookshelf.server.service.dto.UserRegDTO;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void registrationUser(UserRegDTO userRegDTO) {
-        log.info("[UserServiceImpl.registrationUser] personDTO = {}", userRegDTO);
+    public void registerUser(UserRegDTO userRegDTO) {
+        log.info("User registration with [{}] and login [{}] ", userRegDTO, userRegDTO.login);
         User user = new User();
         userRepository.save(user
                 .toBuilder()
@@ -27,15 +27,15 @@ public class UserService {
                 .build());
     }
 
-    public boolean authorizationUser(UserAuthDTO userAuthDTO) {
-        log.info("[UserServiceImpl.authorizationUser] personDTO = {}", userAuthDTO);
-        User user = userRepository.getFirstByLoginAndPassword(userAuthDTO.getLogin(), userAuthDTO.getPassword());
-        return user != null ? true : false;
-    }
-
-    public boolean validationUser(UserAuthDTO userAuthDTO) {
-        log.info("[UserServiceImpl.validationUser] personDTO = {}", userAuthDTO);
+    public boolean validatingUser(UserAuthDTO userAuthDTO) {
+        log.info("Checking that user with login [{}] is not registered yet ", userAuthDTO.login);
         long personCount = userRepository.countByLogin(userAuthDTO.getLogin());
         return personCount != 0 ? false : true;
+    }
+
+    public boolean authorizingUser(UserAuthDTO userAuthDTO) {
+        log.info("Checking that user with login [{}] is exist ", userAuthDTO.login);
+        User user = userRepository.getFirstByLoginAndPassword(userAuthDTO.getLogin(), userAuthDTO.getPassword());
+        return user != null ? true : false;
     }
 }

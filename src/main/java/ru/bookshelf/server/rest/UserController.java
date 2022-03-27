@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.bookshelf.server.service.UserService;
 import ru.bookshelf.server.service.dto.UserAuthDTO;
@@ -19,33 +20,21 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(
-            value = "/registration",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void registrationUser(@Valid @RequestBody UserRegDTO userRegDTO) {
-        log.info("[UserController.registrationUser] personDTO = {}", userRegDTO);
-        userService.registrationUser(userRegDTO);
+    public void userRegistration(@Validated @RequestBody UserRegDTO userRegDTO) {
+        userService.registerUser(userRegDTO);
     }
 
-    ;
-
-    @PostMapping(
-            value = "/validation",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/validation", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean validationUser(@Valid @RequestBody UserAuthDTO userAuthDTO) {
-        log.info("[UserController.validationUser] personDTO = {}", userAuthDTO);
-        return userService.validationUser(userAuthDTO);
+    public boolean userValidation(@Valid @RequestBody UserAuthDTO userAuthDTO) {
+        return userService.validatingUser(userAuthDTO);
     }
-    ;
 
-    @PostMapping(
-            value = "/authorization",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean authorizationUser(@Valid @RequestBody UserAuthDTO userAuthDTO) {
-        log.info("[UserController.authorizationUser] personDTO = {}", userAuthDTO);
-        return userService.authorizationUser(userAuthDTO);
+    public boolean userAuthorization(@Valid @RequestBody UserAuthDTO userAuthDTO) {
+        return userService.authorizingUser(userAuthDTO);
     }
 }

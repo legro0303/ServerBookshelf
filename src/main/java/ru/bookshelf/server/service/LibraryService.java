@@ -17,8 +17,8 @@ import java.util.Optional;
 public class LibraryService {
     private final BookRepository bookRepository;
 
-    public void savingBook(BookDTO bookDTO) {
-        log.info("[LibraryServiceImpl.savingBook] book data = {}", bookDTO);
+    public void addingBookToDB(BookDTO bookDTO) {
+        log.info("Adding book [{}] ", bookDTO);
         Book book = Book
                 .builder()
                 .author(bookDTO.getAuthor())
@@ -30,20 +30,34 @@ public class LibraryService {
         bookRepository.save(book);
     }
 
-    public List countOfBooks() {
+    public List gettingBooksFromDB() {
         List<Book> booksList = bookRepository.findAll();
-        return booksList;
+        List<BookDTO> booksDTOList = new ArrayList<>();
+        for (Book book : booksList) {
+            BookDTO bookDTO = BookDTO
+                    .builder()
+                    .id(book.getId())
+                    .author(book.getAuthor())
+                    .title(book.getTitle())
+                    .publishDate(book.getPublishDate())
+                    .owner(book.getOwner())
+                    .build();
+            booksDTOList.add(bookDTO);
+        }
+        log.info("Return books list [{}] ", booksDTOList);
+        return booksDTOList;
     }
 
-    public byte[] getBytes(String id) {
-        byte[] qwe;
+    public byte[] gettingBookBytesFromDB(String id) {
+        log.info("Getting bytes of book with id [{}] ", id);
+        byte[] bookBytes;
         Optional<Book> book = bookRepository.findById(Long.valueOf(id));
-        qwe = book.get().getFileData();
-        return qwe;
+        bookBytes = book.get().getFileData();
+        return bookBytes;
     }
 
-    public boolean deleteBook(BookDTO bookDTO) {
-        log.info("[LibraryServiceImpl.deleteBook] uploadedBookDTO = {}", bookDTO);
+    public boolean deletingBookFromDB(BookDTO bookDTO) {
+        log.info("Deleting book [{}] ", bookDTO);
         Book book = Book
                 .builder()
                 .id(bookDTO.getId())
@@ -53,7 +67,6 @@ public class LibraryService {
                 .owner(bookDTO.getOwner())
                 .fileData(bookDTO.getFileData())
                 .build();
-        //TODO откуда клиент возьмет id в запросе ?
         long userIsOwnerOfBook = bookRepository.countByOwnerAndId(book.getOwner(), book.getId());
         //TODO оптимизировать
         if (userIsOwnerOfBook != 0) {
@@ -61,5 +74,4 @@ public class LibraryService {
         }
         return userIsOwnerOfBook == 0 ? false : true;
     }
-
 }
