@@ -68,7 +68,6 @@ public class LibraryService {
                 .fileData(bookDTO.getFileData())
                 .build();
         long userIsOwnerOfBook = bookRepository.countByOwnerAndId(book.getOwner(), book.getId());
-        //TODO оптимизировать
         if (userIsOwnerOfBook != 0) {
             bookRepository.delete(book);
         }

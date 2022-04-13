@@ -30,7 +30,7 @@ public class UserService {
     public boolean validatingUser(UserAuthDTO userAuthDTO) {
         log.info("Checking that user with login [{}] is not registered yet ", userAuthDTO.login);
         long personCount = userRepository.countByLogin(userAuthDTO.getLogin());
-        return personCount != 0 ? false : true;
+        return personCount == 0 ? true : false;
     }
 
     public boolean authorizingUser(UserAuthDTO userAuthDTO) {

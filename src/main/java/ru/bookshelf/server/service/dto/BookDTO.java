@@ -3,7 +3,6 @@ package ru.bookshelf.server.service.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
@@ -14,16 +13,15 @@ import java.time.LocalDate;
 @ToString
 @Builder(toBuilder = true)
 public class BookDTO {
-//TODO починить валидацию
     long id;
-    @NotNull
+    @NotEmpty(message = "Author should not be empty")
     String author;
-    @NotNull
+    @NotEmpty(message = "Title should not be empty")
     String title;
-    @NotNull
-    @Past
+    @Past(message = "Publish date cannot be greater than the current date ")
     LocalDate publishDate;
-    @NotNull
+    @NotEmpty(message = "Owner should not be empty")
     String owner;
+    @NotEmpty(message = "Array of bytes doesn't contain any book")
     byte[] fileData;
 }

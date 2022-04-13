@@ -1,6 +1,5 @@
 package ru.bookshelf.server.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -13,8 +12,8 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @SuperBuilder(toBuilder = true) //Need to use builder from subclasses using login and password fields
 public class UserAuthDTO {
-    @NotEmpty
+    @NotEmpty(message = "Login should not be empty")
     public String login;
-    @NotEmpty
+    @NotEmpty(message = "Password should not be empty")
     public String password;
 }
