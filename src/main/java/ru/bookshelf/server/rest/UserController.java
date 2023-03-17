@@ -30,10 +30,14 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> userRegistration(@Validated @RequestBody UserRegDTO userRegDTO, BindingResult bindingResult) {
         String errorMessage = checkErrorsService.checkErrorsExist(bindingResult);
-        if(errorMessage == null){
+
+        if(errorMessage == null)
+        {
             userService.registerUser(userRegDTO);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        } else {
+        }
+        else
+        {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
     }
@@ -42,15 +46,19 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<String> userValidation(@Valid @RequestBody UserAuthDTO userAuthDTO, BindingResult bindingResult) {
         String errorMessage = checkErrorsService.checkErrorsExist(bindingResult);
-        if(errorMessage == null){
-            if(!userService.validatingUser(userAuthDTO)){
+        if(errorMessage == null)
+        {
+            if(!userService.validatingUser(userAuthDTO))
+            {
                 return ResponseEntity
                         .status(HttpStatus.UNPROCESSABLE_ENTITY)
                         .body("User with this login is already registered");
             }
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        } else {
-            log.info("When some fields is null [{}]",ResponseEntity.status(HttpStatus.OK).body(null));
+        }
+        else
+        {
+            log.info("When some fields is null [{}]", ResponseEntity.status(HttpStatus.OK).body(null));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
     }
@@ -59,14 +67,19 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<String> userAuthorization(@Valid @RequestBody UserAuthDTO userAuthDTO, BindingResult bindingResult) {
         String errorMessage = checkErrorsService.checkErrorsExist(bindingResult);
-        if(errorMessage == null){
-            if(!userService.authorizingUser(userAuthDTO)){
+
+        if(errorMessage == null)
+        {
+            if(!userService.authorizingUser(userAuthDTO))
+            {
                 return ResponseEntity
                         .status(HttpStatus.UNPROCESSABLE_ENTITY)
                         .body("Incorrect login or password");
             }
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        } else {
+        }
+        else
+        {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
     }

@@ -16,6 +16,7 @@ public class UserService {
 
     public void registerUser(UserRegDTO userRegDTO) {
         log.info("User registration with [{}] and login [{}] ", userRegDTO, userRegDTO.login);
+
         User user = new User();
         userRepository.save(user
                 .toBuilder()
@@ -30,12 +31,14 @@ public class UserService {
     public boolean validatingUser(UserAuthDTO userAuthDTO) {
         log.info("Checking that user with login [{}] is not registered yet ", userAuthDTO.login);
         long personCount = userRepository.countByLogin(userAuthDTO.getLogin());
+
         return personCount == 0 ? true : false;
     }
 
     public boolean authorizingUser(UserAuthDTO userAuthDTO) {
         log.info("Checking that user with login [{}] is exist ", userAuthDTO.login);
         User user = userRepository.getFirstByLoginAndPassword(userAuthDTO.getLogin(), userAuthDTO.getPassword());
+
         return user != null ? true : false;
     }
 }

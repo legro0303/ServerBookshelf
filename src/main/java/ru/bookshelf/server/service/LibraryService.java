@@ -19,6 +19,7 @@ public class LibraryService {
 
     public void addingBookToDB(BookDTO bookDTO) {
         log.info("Adding book [{}] ", bookDTO);
+
         Book book = Book
                 .builder()
                 .author(bookDTO.getAuthor())
@@ -33,7 +34,9 @@ public class LibraryService {
     public List gettingBooksFromDB() {
         List<Book> booksList = bookRepository.findAll();
         List<BookDTO> booksDTOList = new ArrayList<>();
-        for (Book book : booksList) {
+
+        for (Book book : booksList)
+        {
             BookDTO bookDTO = BookDTO
                     .builder()
                     .id(book.getId())
@@ -44,15 +47,18 @@ public class LibraryService {
                     .build();
             booksDTOList.add(bookDTO);
         }
+
         log.info("Return books list [{}] ", booksDTOList);
         return booksDTOList;
     }
 
     public byte[] gettingBookBytesFromDB(String id) {
         log.info("Getting bytes of book with id [{}] ", id);
+
         byte[] bookBytes;
         Optional<Book> book = bookRepository.findById(Long.valueOf(id));
         bookBytes = book.get().getFileData();
+
         return bookBytes;
     }
 
@@ -67,10 +73,13 @@ public class LibraryService {
                 .owner(bookDTO.getOwner())
                 .fileData(bookDTO.getFileData())
                 .build();
+
         long userIsOwnerOfBook = bookRepository.countByOwnerAndId(book.getOwner(), book.getId());
-        if (userIsOwnerOfBook != 0) {
+        if (userIsOwnerOfBook != 0)
+        {
             bookRepository.delete(book);
         }
+
         return userIsOwnerOfBook == 0 ? false : true;
     }
 }
